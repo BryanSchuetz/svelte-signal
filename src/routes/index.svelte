@@ -1,12 +1,24 @@
 <script>
-  import {html, attributes} from '$lib/content/2019-07-30-dry-the-rain.md'
+  export const allposts = import.meta.glob('/src/lib/posts/*.md')
+  export let attributes;
+  export let html;
+  let list = [];
+  for (const path in allposts) {
+    allposts[path]().then((mod) => {
+      list.push({title: mod.attributes.title, path: path.replace("/src/lib/posts","blog").replace(".md","")});
+      list = list;
+    })
+  }
 </script>
-	<h1 class="text-red-600 uppercase text-6xl font-thin leading-tight my-16 mx-auto max-w-xl">{attributes.title}</h1>
-  <div>
-    {@html html}
-  </div>
 
-	<p class="max-w-xs my-8 mx-auto leading-snug">Visit <a class="text-blue-600 underline" href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte apps.</p>
+<ul>
+  {#each list as post, i}
+    <li>
+      <a href="{post.path}">{post.title}</a>
+    </li>
+  {/each}
+</ul>
+	
 
 <style lang="scss">
 	:root {
